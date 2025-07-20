@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuvWork - Find Joy in Your Work Journey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .hero .description {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+        
+        .cta-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+            transform: translateY(20px);
+            animation: slideUp 0.8s ease forwards;
+        }
+        
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        .cta-form h2 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .persona-selector {
+            margin-bottom: 1.5rem;
+        }
+        
+        .persona-option {
+            display: block;
+            margin-bottom: 0.8rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .persona-option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .persona-option input[type="radio"] {
+            margin-right: 0.8rem;
+        }
+        
+        .persona-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+        
+        .persona-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input[type="text"], input[type="email"], input[type="tel"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .cta-button {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .features {
+            background: white;
+            padding: 4rem 0;
+        }
+        
+        .features h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: #333;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .testimonial {
+            background: #f8f9fa;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .testimonial-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .testimonial blockquote {
+            font-size: 1.3rem;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        
+        .trust-indicators {
+            background: white;
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .trust-text {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .cta-form {
+                margin: 2rem 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Find Joy in Your Work Journey</h1>
+                <p class="subtitle">Daily coaching that transforms how you experience work</p>
+                <p class="description">
+                    Join thousands discovering that work doesn't have to drain you—it can actually energize and fulfill you. 
+                    Get personalized text message coaching delivered daily to help you find genuine joy in your work.
+                </p>
+                
+                <div class="cta-form">
+                    <h2>Start Your Joy Journey</h2>
+                    <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                        Choose your path and get daily coaching tailored to your work situation
+                    </p>
+                    
+                    <form>
+                        <div class="persona-selector">
+                            <label class="persona-option">
+                                <input type="radio" name="persona" value="current-role" checked>
+                                <div>
+                                    <div class="persona-title">Joy in My Current Role</div>
+                                    <div class="persona-desc">Find meaning and engagement in your existing job</div>
+                                </div>
+                            </label>
+                            
+                            <label class="persona-option">
+                                <input type="radio" name="persona" value="next-role">
+                                <div>
+                                    <div class="persona-title">Joy in My Next Role</div>
+                                    <div class="persona-desc">Navigate job searching with purpose and clarity</div>
+                                </div>
+                            </label>
+                            
+                            <label class="persona-option">
+                                <input type="radio" name="persona" value="new-path">
+                                <div>
+                                    <div class="persona-title">Joy in My New Path</div>
+                                    <div class="persona-desc">Discover fulfilling work as a student or career changer</div>
+                                </div>
+                            </label>
+                            
+                            <label class="persona-option">
+                                <input type="radio" name="persona" value="discovery">
+                                <div>
+                                    <div class="persona-title">Discovering My Calling</div>
+                                    <div class="persona-desc">Explore career possibilities and find your direction</div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Your mobile number for daily coaching" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="For progress updates and resources" required>
+                        </div>
+                        
+                        <button type="submit" class="cta-button">
+                            Start My Daily Joy Coaching
+                        </button>
+                        
+                        <p style="font-size: 0.8rem; color: #666; margin-top: 1rem; text-align: center;">
+                            7-day free trial • Cancel anytime • $4.99/month after trial
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features">
+        <div class="container">
+            <h2>Why Daily Joy Coaching Works</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <h3>Daily Micro-Learning</h3>
+                    <p>2-3 minute daily messages that fit your schedule. Real wisdom you can actually use, delivered when you need it most.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Personalized to You</h3>
+                    <p>Coaching adapted to your specific work situation, goals, and challenges. Not generic advice—real guidance for your journey.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Science-Based</h3>
+                    <p>Grounded in 20+ years of workplace psychology research and proven behavioral change techniques.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Works Anywhere</h3>
+                    <p>Simple text messages work on any phone, in any country. No apps to download, no complicated setup.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="testimonial">
+        <div class="container">
+            <div class="testimonial-content">
+                <blockquote>
+                    "I never thought work could actually bring me joy. After 3 weeks of daily coaching, I found ways to make my current job energizing instead of draining. The small daily shifts added up to huge changes."
+                </blockquote>
+                <cite>— Sarah M., Marketing Manager</cite>
+            </div>
+        </div>
+    </section>
+    
+    <section class="trust-indicators">
+        <div class="container">
+            <p class="trust-text">Trusted by thousands finding joy in their work</p>
+            <div class="security-badges">
+                <span class="badge">🔒 Privacy Protected</span>
+                <span class="badge">✋ Cancel Anytime</span>
+                <span class="badge">📞 SMS/Text Only</span>
+                <span class="badge">🎓 Research-Based</span>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        // Simple form interaction
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get selected persona
+            const selectedPersona = document.querySelector('input[name="persona"]:checked').value;
+            const firstName = document.getElementById('firstName').value;
+            
+            // Simple success message (replace with actual form submission)
+            alert(`Thanks ${firstName}! Your ${selectedPersona} coaching journey starts tomorrow. Check your phone for your first message!`);
+        });
+        
+        // Add smooth scrolling and animations
+        window.addEventListener('load', function() {
+            document.querySelector('.cta-form').style.opacity = '1';
+        });
+    </script>
+</body>
+</html>
