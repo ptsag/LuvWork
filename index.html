@@ -3,446 +3,1081 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuvWork | Find Joy in Your Work & Life | It's a journey, so why not luv it!</title>
+    <title>LuvWork</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .hero {
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: white;
-            position: relative;
+            color: #333;
+        }
+
+        .app-container {
+            max-width: 400px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .main-content {
+            padding: 20px;
+            min-height: calc(100vh - 120px);
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .welcome-screen {
+            text-align: center;
+            padding-top: 40px;
+        }
+
+        .joy-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+        }
+
+        .welcome-text h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .welcome-text p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
             width: 100%;
+            margin-bottom: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .assessment-screen .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            color: #2c3e50;
+        }
+
+        .question-options {
+            space-y: 10px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f2ff, #e8efff);
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             height: 100%;
-            background: rgba(0,0,0,0.2);
-            z-index: 1;
-        }        
-        
-        .hero-content {
-            position: relative;
-            z-index: 2;
+            width: 0%;
+            transition: width 0.3s ease;
         }
-        
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+
+        .coaching-screen {
+            padding-top: 20px;
         }
-        
-        .hero .subtitle {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
+
+        .joy-score {
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 30px;
         }
-        
-        .hero .description {
-            font-size: 1.2rem;
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+
+        .joy-score h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
             opacity: 0.9;
         }
-        
-        .cta-form {
-            background: white;
-            padding: 2rem 2rem 4rem 2rem; 
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            max-width: 500px;
-            margin: 0 auto;
-            margin-bottom: 60px;
-            transform: translateY(20px);
-            animation: slideUp 0.8s ease forwards;
+
+        .score-display {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
-        
-        @keyframes slideUp {
+
+        .score-label {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .coaching-message {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .coaching-message h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .coaching-message p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .action-suggestions {
+            margin-top: 30px;
+        }
+
+        .action-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .action-item h5 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .action-item p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .framework-badges {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .daily-message {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .daily-message h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .message-time {
+            opacity: 0.8;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .nav-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-btn.secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 1px solid #e9ecef;
+        }
+
+        .insight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #ffa726;
+        }
+
+        .insight-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
             to {
+                opacity: 1;
                 transform: translateY(0);
             }
         }
-        
-        .cta-form h2 {
-            color: #333;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-        }
-        
-        .persona-selector {
-            margin-bottom: 1.5rem;
-        }
-        
-        .persona-option {
-            display: block;
-            margin-bottom: 0.8rem;
-            padding: 1rem;
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-        }
-        
-        .persona-option:hover {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-        
-        .persona-option input[type="radio"] {
-            margin-right: 0.8rem;
-        }
-        
-        .persona-title {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 0.3rem;
-        }
-        
-        .persona-desc {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #333;
-            font-weight: 500;
-        }
-        
-        input[type="text"], input[type="email"], input[type="tel"] {
-            width: 100%;
-            padding: 0.8rem;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        .cta-button {
-            width: 100%;
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .features {
-            background: white;
-            padding: 4rem;
-        }
-        
-        .features h2 {
-            text-align: center;
-            margin-bottom: 3rem;
-            font-size: 2.5rem;
-            color: #333;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-        
-        .feature {
-            text-align: center;
-            padding: 1.5rem;
-        }
-        
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-        
-        .feature h3 {
-            margin-bottom: 1rem;
-            color: #333;
-        }
-        
-        .testimonial {
-            background: #f8f9fa;
-            padding: 4rem 0;
-            text-align: center;
-        }
-        
-        .testimonial-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .testimonial blockquote {
-            font-size: 1.3rem;
-            font-style: italic;
-            color: #555;
-            margin-bottom: 1rem;
-        }
-        
-        .trust-indicators {
-            background: white;
-            padding: 2rem 0;
-            text-align: center;
-            border-top: 1px solid #e9ecef;
-        }
-        
-        .trust-text {
-            color: #666;
-            margin-bottom: 1rem;
-        }
-        
-        .security-badges {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .badge {
-            padding: 0.5rem 1rem;
-            background: #f8f9fa;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: #555;
-        }
-        
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero .subtitle {
-                font-size: 1.2rem;
-            }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            
-            .cta-form {
-                margin: 2rem 1rem 0;
-            }
 
-            .transparent-spacer {
-    height: 60px; /* Adjust this value for the desired height of your spacer */
-    background-color: transparent; /* Ensures it's transparent */
-            }
-            
+        .screen.active {
+            animation: slideIn 0.4s ease-out;
+        }
     </style>
 </head>
 <body>
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content"><br><br>
-                <h1>LuvWork <img src="LuvWork.png" alt="LuvWork logo" height="40"></h1>
-                <p class="subtitle">Daily coaching that transforms how you experience work</p>
-                <p class="description">
-                    Join thousands discovering that work doesn't have to drain you—it can energize and fulfill you. 
-                    Get personalized text message coaching delivered daily to help you find genuine joy in your work.
-                </p>
-                
-                <div class="cta-form">
-                    <h2>Start Your Joy Journey</h2>
-                    <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.95rem;">
-                        Choose your path and get daily coaching tailored to your work situation
-                    </p>
+    <div class="app-container">
+        <div class="header">
+            <h1>LuvWork</h1>
+            <p>Your personal guide to finding joy in work</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Welcome Screen -->
+            <div class="screen active" id="welcome">
+                <div class="welcome-screen">
+                    <div class="joy-icon">😊</div>
+                    <div class="welcome-text">
+                        <h2>Transform Your Work Experience</h2>
+                        <p>Discover what brings you joy at work through our science-backed coaching approach. Get personalized insights and daily guidance to love what you do.</p>
+                    </div>
+                    <button class="btn" onclick="startAssessment()">Start Your Joy Assessment</button>
+                    <button class="btn btn-secondary" onclick="showScreen('demo')">See How It Works</button>
+                </div>
+            </div>
+
+            <!-- Assessment Screen -->
+            <div class="screen" id="assessment">
+                <div class="assessment-screen">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar"></div>
+                    </div>
                     
-                    <form>
-                        <div class="persona-selector">
-                            <label class="persona-option">
-                                <input type="radio" name="persona" value="current-role" checked>
-                                <div>
-                                    <div class="persona-title">Joy in My Current Role</div>
-                                    <div class="persona-desc">Find meaning and engagement in your existing job</div>
-                                </div>
-                            </label>
-                            
-                            <label class="persona-option">
-                                <input type="radio" name="persona" value="next-role">
-                                <div>
-                                    <div class="persona-title">Joy in My Next Role</div>
-                                    <div class="persona-desc">Navigate job searching with purpose and clarity</div>
-                                </div>
-                            </label>
-                            
-                            <label class="persona-option">
-                                <input type="radio" name="persona" value="new-path">
-                                <div>
-                                    <div class="persona-title">Joy in My New Path</div>
-                                    <div class="persona-desc">Discover fulfilling work as a student or career changer</div>
-                                </div>
-                            </label>
-                            
-                            <label class="persona-option">
-                                <input type="radio" name="persona" value="discovery">
-                                <div>
-                                    <div class="persona-title">Discovering My Calling</div>
-                                    <div class="persona-desc">Explore career possibilities and find your direction</div>
-                                </div>
-                            </label>
+                    <div class="question-container">
+                        <div class="question-number">Question <span id="questionNum">1</span> of 5</div>
+                        <div class="question-text" id="questionText"></div>
+                        <div class="question-options" id="questionOptions"></div>
+                    </div>
+
+                    <div class="navigation">
+                        <button class="nav-btn secondary" id="prevBtn" onclick="previousQuestion()" style="display: none;">Previous</button>
+                        <button class="nav-btn primary" id="nextBtn" onclick="nextQuestion()" disabled>Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div class="screen" id="results">
+                <div class="coaching-screen">
+                    <div class="joy-score">
+                        <h3>Your Current Joy Score</h3>
+                        <div class="score-display" id="joyScore">--</div>
+                        <div class="score-label">out of 100</div>
+                    </div>
+
+                    <div class="framework-badges">
+                        <div class="badge">Journey: <span id="journeyScore">--</span></div>
+                        <div class="badge">Ownership: <span id="ownershipScore">--</span></div>
+                        <div class="badge">Yearning: <span id="yearningScore">--</span></div>
+                    </div>
+
+                    <div class="insight-card">
+                        <h4>🎯 Your Primary Opportunity</h4>
+                        <p id="primaryInsight">Loading your personalized insights...</p>
+                    </div>
+
+                    <div class="daily-message">
+                        <h4>Today's Coaching Message</h4>
+                        <p id="dailyCoachingMessage">Loading your personalized message...</p>
+                        <div class="message-time">Delivered at optimal time for you</div>
+                    </div>
+
+                    <div class="action-suggestions">
+                        <h4 style="margin-bottom: 15px; color: #2c3e50;">🚀 Recommended Actions</h4>
+                        <div id="actionItems"></div>
+                    </div>
+
+                    <button class="btn" onclick="showScreen('coaching')">Continue to Daily Coaching</button>
+                </div>
+            </div>
+
+            <!-- Daily Coaching Screen -->
+            <div class="screen" id="coaching">
+                <div class="coaching-screen">
+                    <div class="coaching-message">
+                        <h4>🌟 Morning Intention</h4>
+                        <p id="morningMessage">Loading your morning guidance...</p>
+                    </div>
+
+                    <div class="coaching-message">
+                        <h4>🔄 Midday Check-in</h4>
+                        <p id="middayMessage">How are you feeling about your work energy right now?</p>
+                        <div style="margin-top: 15px;">
+                            <button class="nav-btn secondary" onclick="respondToCoaching('energized')" style="margin-right: 10px;">Energized 🚀</button>
+                            <button class="nav-btn secondary" onclick="respondToCoaching('neutral')" style="margin-right: 10px;">Neutral 😐</button>
+                            <button class="nav-btn secondary" onclick="respondToCoaching('drained')">Drained 😴</button>
                         </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="firstName">First Name</label>
-                                <input type="text" id="firstName" name="firstName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lastName">Last Name</label>
-                                <input type="text" id="lastName" name="lastName" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" placeholder="Your mobile number for daily coaching" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" placeholder="For progress updates and resources" required>
-                        </div>
-                        
-                        <button type="submit" class="cta-button">
-                            Sign Up for Joy
-                        </button>
-                        
-                        <p style="font-size: 0.8rem; color: #666; margin-top: 1rem; text-align: center;">
-                            7-day free trial • Cancel anytime • $4.99/month after trial
-                        <br><br></p>
-                    </form>
+                    </div>
+
+                    <div class="coaching-message">
+                        <h4>🎯 Quick Win Opportunity</h4>
+                        <p id="quickWinMessage">Loading your personalized opportunity...</p>
+                    </div>
+
+                    <div class="navigation">
+                        <button class="nav-btn secondary" onclick="showScreen('results')">View Assessment</button>
+                        <button class="nav-btn primary" onclick="getNewCoaching()">Get Fresh Coaching</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Screen -->
+            <div class="screen" id="demo">
+                <div class="coaching-screen">
+                    <h3 style="margin-bottom: 20px; color: #2c3e50;">How LuvWork Works</h3>
+                    
+                    <div class="insight-card">
+                        <h4>1. Personalized Assessment</h4>
+                        <p>Answer 5 quick questions based on the JOY Framework (Journey, Ownership, Yearning) to understand your unique work psychology.</p>
+                    </div>
+
+                    <div class="insight-card">
+                        <h4>2. AI-Powered Insights</h4>
+                        <p>Get immediate, science-backed analysis of your work satisfaction patterns and specific opportunities for improvement.</p>
+                    </div>
+
+                    <div class="insight-card">
+                        <h4>3. Daily Micro-Coaching</h4>
+                        <p>Receive personalized messages throughout your workday - morning intentions, midday reframes, and reflection prompts.</p>
+                    </div>
+
+                    <div class="insight-card">
+                        <h4>4. Continuous Learning</h4>
+                        <p>Weekly mini-assessments help the AI coach learn your patterns and deliver increasingly personalized guidance.</p>
+                    </div>
+
+                    <button class="btn" onclick="showScreen('welcome')">Start Your Journey</button>
                 </div>
             </div>
         </div>
-    </section>
-    <section class="features">
-        <div class="container">
-            <h2>LuvWork just works</h2>
-            <div class="features-grid">
-                <div class="feature">
-                    <div class="feature-icon">📱</div>
-                    <h3>Daily Micro-Learning</h3>
-                    <p>2-3 minute daily messages that fit your schedule. Real wisdom you can use, delivered when you need it most.</p>
-                </div>
-                
-                <div class="feature">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Personalized to You</h3>
-                    <p>Coaching adapted to your specific work situation, goals, and challenges. Not generic advice—real guidance for your journey.</p>
-                </div>
-                
-                <div class="feature">
-                    <div class="feature-icon">𖡎</div>
-                    <h3>Science-Based</h3>
-                    <p>Grounded in 20+ years of workplace psychology research and proven behavioral change techniques.</p>
-                </div>
-                
-                <div class="feature">
-                    <div class="feature-icon">🌐</div>
-                    <h3>Works Anywhere</h3>
-                    <p>Simple text messages work on any phone, in any country. No apps to download, no complicated setup.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <section class="testimonial">
-        <div class="container">
-            <div class="testimonial-content">
-                <blockquote>
-                    "I never thought work could actually bring me joy. After 3 weeks of daily coaching, I found ways to make my current job energizing instead of draining. The small daily shifts added up to huge changes."
-                </blockquote>
-                <cite>— Sarah M., Marketing Manager</cite>
-            </div>
-        </div>
-    </section>
-    
-    <section class="trust-indicators">
-        <div class="container">
-            <p class="trust-text">Trusted by thousands finding joy in their work</p>
-            <div class="security-badges">
-                <span class="badge">🔒 Privacy Protected</span>
-                <span class="badge">✋ Cancel Anytime</span>
-                <span class="badge">📞 SMS/Text Only</span>
-                <span class="badge">🎓 Research-Based</span>
-            </div>
-        </div>
-    </section>
-    
+    </div>
+
     <script>
-        // Simple form interaction
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Assessment Questions and Data
+        const assessmentQuestions = [
+            {
+                id: 1,
+                category: 'journey',
+                question: "What part of your work gives you the strongest sense of 'this is why I'm here'?",
+                options: [
+                    { text: "Solving complex problems that challenge me", value: 8, type: "achievement" },
+                    { text: "Helping others succeed and grow", value: 9, type: "service" },
+                    { text: "Creating something new and innovative", value: 8, type: "creativity" },
+                    { text: "Being recognized as an expert", value: 6, type: "recognition" },
+                    { text: "I'm still figuring that out", value: 3, type: "exploring" }
+                ]
+            },
+            {
+                id: 2,
+                category: 'ownership',
+                question: "When do you feel most in control of your work experience?",
+                options: [
+                    { text: "When I can set my own schedule and priorities", value: 9, type: "autonomy" },
+                    { text: "When leading a project from start to finish", value: 8, type: "leadership" },
+                    { text: "When I have clear guidelines to follow", value: 5, type: "structure" },
+                    { text: "When collaborating closely with my team", value: 7, type: "collaboration" },
+                    { text: "I rarely feel in control of my work", value: 2, type: "low-control" }
+                ]
+            },
+            {
+                id: 3,
+                category: 'yearning',
+                question: "What skill or capability are you most excited to develop right now?",
+                options: [
+                    { text: "Leadership and people management", value: 8, type: "leadership" },
+                    { text: "Technical expertise in my field", value: 7, type: "technical" },
+                    { text: "Communication and influence skills", value: 8, type: "communication" },
+                    { text: "Strategic thinking and planning", value: 9, type: "strategy" },
+                    { text: "I'm not sure what I want to develop", value: 3, type: "unclear" }
+                ]
+            },
+            {
+                id: 4,
+                category: 'energy',
+                question: "At what time and in what situations does your work energy feel highest?",
+                options: [
+                    { text: "Early morning when I can focus deeply", value: 8, type: "morning-focus" },
+                    { text: "During brainstorming and creative sessions", value: 9, type: "creative" },
+                    { text: "When teaching or mentoring others", value: 8, type: "mentoring" },
+                    { text: "During intense problem-solving challenges", value: 7, type: "problem-solving" },
+                    { text: "My energy feels consistently low", value: 2, type: "low-energy" }
+                ]
+            },
+            {
+                id: 5,
+                category: 'values',
+                question: "Which of these matters most in your ideal work environment?",
+                options: [
+                    { text: "Strong relationships and team connection", value: 8, type: "connection" },
+                    { text: "Opportunities for creativity and innovation", value: 9, type: "creativity" },
+                    { text: "Clear impact and measurable results", value: 8, type: "impact" },
+                    { text: "Stability and predictable growth", value: 6, type: "stability" },
+                    { text: "Flexibility and work-life integration", value: 7, type: "flexibility" }
+                ]
+            }
+        ];
+
+        // User State
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let userProfile = {
+            journey: 0,
+            ownership: 0,
+            yearning: 0,
+            energyPattern: '',
+            values: '',
+            overallScore: 0
+        };
+
+        // Coaching Content Database
+        const coachingContent = {
+            insights: {
+                'low-journey': "Your work purpose isn't fully activated yet. This is actually a huge opportunity - when you find work that aligns with your deeper 'why', everything changes.",
+                'medium-journey': "You have some sense of purpose in your work, but there's room to deepen that connection. Small shifts in how you frame your daily tasks could unlock more meaning.",
+                'high-journey': "You have a strong sense of purpose in your work! This is your foundation for joy. Focus on amplifying this strength while building the other dimensions.",
+                'low-ownership': "You're experiencing limited autonomy in your work decisions. Even small areas where you can claim ownership will start building your sense of control.",
+                'medium-ownership': "You have some control over your work experience, but there's opportunity to expand your influence. Look for decisions you could own more fully.",
+                'high-ownership': "You have strong ownership of your work! This autonomy is serving you well. Use this strength to help others find more control in their roles too.",
+                'low-yearning': "Your growth orientation needs activation. This might feel uncomfortable now, but identifying even one area for development can reignite your motivation.",
+                'medium-yearning': "You have some growth momentum, but it could be more focused. Choosing one specific development area might accelerate your satisfaction.",
+                'high-yearning': "Your growth mindset is strong! This drive for development is a key source of work energy. Channel this into opportunities that stretch you most."
+            },
+            dailyMessages: {
+                'high-journey-low-ownership': "Today's focus: Find one decision you can own completely. Even small choices build your sense of control while honoring your strong purpose.",
+                'high-yearning-low-journey': "Your growth mindset is powerful. Today, connect one learning opportunity to a larger purpose that excites you.",
+                'high-ownership-low-yearning': "You control your work well. Today, identify one skill you could develop that would expand your influence even further.",
+                'balanced-profile': "You have solid foundations across all areas. Today, focus on the small moments that bring you the most energy.",
+                'development-needed': "Every expert was once a beginner. Today, choose one small action that moves you toward the work experience you want.",
+                'morning-intention': "Start today by identifying the one task that most aligns with why you're here. Do that first.",
+                'midday-reframe': "That frustration you're feeling? It's information. What does it tell you about what you value most in your work?",
+                'energy-boost': "Notice what's energizing you right now. How can you get more of that in your day?",
+                'end-reflection': "Today's wins, however small, are building the foundation for tomorrow's joy. What pattern do you notice?"
+            },
+            quickWins: {
+                'journey': [
+                    "Write a one-sentence mission statement for your current role",
+                    "Identify how your work connects to outcomes you care about",
+                    "Share your expertise with someone who could benefit from it"
+                ],
+                'ownership': [
+                    "Choose one recurring decision you could make independently",
+                    "Redesign one aspect of how you approach a regular task",
+                    "Set a boundary that protects your most productive work time"
+                ],
+                'yearning': [
+                    "Sign up for one learning opportunity related to your goals",
+                    "Ask for feedback on a skill you want to develop",
+                    "Volunteer for a project that stretches your current abilities"
+                ]
+            }
+        };
+
+        // Core Functions
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function startAssessment() {
+            showScreen('assessment');
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = assessmentQuestions[currentQuestion];
+            const progressPercent = ((currentQuestion + 1) / assessmentQuestions.length) * 100;
             
-            // Get selected persona
-            const selectedPersona = document.querySelector('input[name="persona"]:checked').value;
-            const firstName = document.getElementById('firstName').value;
+            document.getElementById('progressBar').style.width = progressPercent + '%';
+            document.getElementById('questionNum').textContent = currentQuestion + 1;
+            document.getElementById('questionText').textContent = question.question;
             
-            // Simple success message (replace with actual form submission)
-            // alert(`Thanks ${firstName}! Your ${selectedPersona} coaching journey starts tomorrow. Check your phone for your first message!`);
-            alert(`Thanks ${firstName}! We're getting ready to launch! Please check back!`);
-        });
-        
-        // Add smooth scrolling and animations
-        window.addEventListener('load', function() {
-            document.querySelector('.cta-form').style.opacity = '1';
+            const optionsContainer = document.getElementById('questionOptions');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option.text;
+                optionElement.onclick = () => selectOption(index, optionElement);
+                optionsContainer.appendChild(optionElement);
+            });
+
+            // Update navigation
+            document.getElementById('prevBtn').style.display = currentQuestion > 0 ? 'block' : 'none';
+            document.getElementById('nextBtn').disabled = true;
+        }
+
+        function selectOption(optionIndex, element) {
+            // Remove previous selections
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            // Store answer
+            const question = assessmentQuestions[currentQuestion];
+            const selectedOption = question.options[optionIndex];
+            
+            userAnswers[currentQuestion] = {
+                questionId: question.id,
+                category: question.category,
+                selectedOption: selectedOption,
+                value: selectedOption.value,
+                type: selectedOption.type
+            };
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < assessmentQuestions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                processResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+                
+                // Restore previous selection
+                const previousAnswer = userAnswers[currentQuestion];
+                if (previousAnswer) {
+                    const options = document.querySelectorAll('.option');
+                    const question = assessmentQuestions[currentQuestion];
+                    const selectedIndex = question.options.findIndex(opt => opt.text === previousAnswer.selectedOption.text);
+                    if (selectedIndex !== -1) {
+                        options[selectedIndex].classList.add('selected');
+                        document.getElementById('nextBtn').disabled = false;
+                    }
+                }
+            }
+        }
+
+        function processResults() {
+            // Calculate scores
+            let journeyTotal = 0, ownershipTotal = 0, yearningTotal = 0;
+            let journeyCount = 0, ownershipCount = 0, yearningCount = 0;
+            
+            userAnswers.forEach(answer => {
+                switch(answer.category) {
+                    case 'journey':
+                        journeyTotal += answer.value;
+                        journeyCount++;
+                        break;
+                    case 'ownership':
+                        ownershipTotal += answer.value;
+                        ownershipCount++;
+                        break;
+                    case 'yearning':
+                        yearningTotal += answer.value;
+                        yearningCount++;
+                        break;
+                }
+            });
+
+            // Calculate averages and overall score
+            userProfile.journey = journeyCount > 0 ? Math.round((journeyTotal / journeyCount) * 10) : 0;
+            userProfile.ownership = ownershipCount > 0 ? Math.round((ownershipTotal / ownershipCount) * 10) : 0;
+            userProfile.yearning = yearningCount > 0 ? Math.round((yearningTotal / yearningCount) * 10) : 0;
+            userProfile.overallScore = Math.round((userProfile.journey + userProfile.ownership + userProfile.yearning) / 3);
+
+            // Extract patterns
+            userProfile.energyPattern = userAnswers.find(a => a.category === 'energy')?.type || 'mixed';
+            userProfile.values = userAnswers.find(a => a.category === 'values')?.type || 'mixed';
+
+            displayResults();
+        }
+
+        function displayResults() {
+            // Update scores
+            document.getElementById('joyScore').textContent = userProfile.overallScore;
+            document.getElementById('journeyScore').textContent = userProfile.journey;
+            document.getElementById('ownershipScore').textContent = userProfile.ownership;
+            document.getElementById('yearningScore').textContent = userProfile.yearning;
+
+            // Generate primary insight
+            const lowestDimension = getLowestDimension();
+            const insight = generateInsight(lowestDimension);
+            document.getElementById('primaryInsight').textContent = insight;
+
+            // Generate daily coaching message
+            const dailyMessage = generateDailyMessage();
+            document.getElementById('dailyCoachingMessage').textContent = dailyMessage;
+
+            // Generate action items
+            const actions = generateActionItems();
+            displayActionItems(actions);
+
+            showScreen('results');
+        }
+
+        function getLowestDimension() {
+            const scores = {
+                journey: userProfile.journey,
+                ownership: userProfile.ownership,
+                yearning: userProfile.yearning
+            };
+            
+            return Object.keys(scores).reduce((a, b) => scores[a] < scores[b] ? a : b);
+        }
+
+        function generateInsight(dimension) {
+            const score = userProfile[dimension];
+            let level;
+            if (score < 40) level = 'low';
+            else if (score < 70) level = 'medium';
+            else level = 'high';
+            
+            return coachingContent.insights[`${level}-${dimension}`] || 
+                   `Your ${dimension} dimension shows opportunity for growth. This is where focused attention could create the biggest positive shift in your work experience.`;
+        }
+
+        function generateDailyMessage() {
+            const { journey, ownership, yearning } = userProfile;
+            
+            if (journey >= 70 && ownership < 50) {
+                return coachingContent.dailyMessages['high-journey-low-ownership'];
+            } else if (yearning >= 70 && journey < 50) {
+                return coachingContent.dailyMessages['high-yearning-low-journey'];
+            } else if (ownership >= 70 && yearning < 50) {
+                return coachingContent.dailyMessages['high-ownership-low-yearning'];
+            } else if (Math.min(journey, ownership, yearning) >= 60) {
+                return coachingContent.dailyMessages['balanced-profile'];
+            } else {
+                return coachingContent.dailyMessages['development-needed'];
+            }
+        }
+
+        function generateActionItems() {
+            const lowestDimension = getLowestDimension();
+            const actions = coachingContent.quickWins[lowestDimension] || coachingContent.quickWins.journey;
+            
+            return actions.map((action, index) => ({
+                title: `${lowestDimension.charAt(0).toUpperCase() + lowestDimension.slice(1)} Booster ${index + 1}`,
+                description: action
+            }));
+        }
+
+        function displayActionItems(actions) {
+            const container = document.getElementById('actionItems');
+            container.innerHTML = '';
+            
+            actions.forEach(action => {
+                const item = document.createElement('div');
+                item.className = 'action-item';
+                item.innerHTML = `
+                    <h5>${action.title}</h5>
+                    <p>${action.description}</p>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function generateCoachingMessages() {
+            const messages = {
+                morning: generateContextualMessage('morning'),
+                midday: generateContextualMessage('midday'),
+                quickWin: generateContextualMessage('quickwin')
+            };
+            
+            document.getElementById('morningMessage').textContent = messages.morning;
+            document.getElementById('middayMessage').textContent = messages.midday;
+            document.getElementById('quickWinMessage').textContent = messages.quickWin;
+        }
+
+        function generateContextualMessage(timeOfDay) {
+            const { journey, ownership, yearning, energyPattern, values } = userProfile;
+            
+            const morningMessages = [
+                `Start today by focusing on the work that connects to your deeper purpose. Your journey score of ${journey} shows there's meaning waiting to be unlocked.`,
+                `Today, look for one decision you can make completely on your own. Building ownership starts with small choices.`,
+                `Your growth mindset is an asset. Identify one conversation today that could teach you something new.`,
+                `Notice what energizes you in the first hour of work. That pattern holds clues for designing better days.`
+            ];
+
+            const middayMessages = [
+                `Midday energy check: Are you working on what matters most, or just what's urgent? Your values lean toward ${values} - honor that.`,
+                `If you're feeling stuck, ask: 'What would I do here if I had complete ownership of this situation?'`,
+                `Feeling drained? Look for the learning opportunity hidden in whatever you're struggling with right now.`,
+                `Take 30 seconds to connect this moment to your bigger picture. Why does this work matter?`
+            ];
+
+            const quickWinMessages = [
+                `Quick win opportunity: Identify one recurring task you could improve or eliminate entirely. Your ownership score suggests you have more control than you're using.`,
+                `Today's growth opportunity: Ask one colleague about their approach to something you want to get better at.`,
+                `Joy boost: Spend 5 minutes helping someone else succeed at something. Your purpose comes alive when you're useful to others.`,
+                `Energy multiplier: Do your most important work during your natural energy peak. You mentioned being most energized during ${energyPattern} activities.`
+            ];
+
+            const messageArrays = {
+                morning: morningMessages,
+                midday: middayMessages,
+                quickwin: quickWinMessages
+            };
+
+            const selectedArray = messageArrays[timeOfDay] || morningMessages;
+            return selectedArray[Math.floor(Math.random() * selectedArray.length)];
+        }
+
+        function respondToCoaching(energyLevel) {
+            const responses = {
+                energized: "Amazing! That energy is your natural joy showing up. What specifically is creating that feeling? Try to get more of whatever that is.",
+                neutral: "Neutral energy is information too. What would need to shift to move you from neutral to energized? Sometimes it's smaller than you think.",
+                drained: "Energy dips are normal and valuable feedback. What's draining you isn't usually the work itself, but how you're approaching it. What would feel different?"
+            };
+
+            // Update the midday message with the response
+            const responseElement = document.createElement('div');
+            responseElement.style.marginTop = '15px';
+            responseElement.style.padding = '10px';
+            responseElement.style.background = '#f0f2ff';
+            responseElement.style.borderRadius = '8px';
+            responseElement.style.fontSize = '14px';
+            responseElement.innerHTML = `<strong>Your coach responds:</strong> ${responses[energyLevel]}`;
+            
+            const middaySection = document.getElementById('middayMessage').parentElement;
+            const existingResponse = middaySection.querySelector('.coach-response');
+            if (existingResponse) {
+                existingResponse.remove();
+            }
+            responseElement.className = 'coach-response';
+            middaySection.appendChild(responseElement);
+
+            // Generate follow-up coaching based on energy level
+            generateFollowUpCoaching(energyLevel);
+        }
+
+        function generateFollowUpCoaching(energyLevel) {
+            const followUps = {
+                energized: [
+                    "Capture this moment: What exactly is working right now?",
+                    "How could you design more of your day around this energy?",
+                    "Who else could benefit from whatever's energizing you?"
+                ],
+                neutral: [
+                    "Small shifts create big changes. What's one tiny adjustment you could make?",
+                    "Look for the choice hidden in what feels routine.",
+                    "Sometimes neutral means you're ready for something new."
+                ],
+                drained: [
+                    "What would you need to feel energized again?",
+                    "Is this task draining, or is it how you're approaching it?",
+                    "Energy follows attention. Where is yours going right now?"
+                ]
+            };
+
+            // Add follow-up questions to the interface
+            setTimeout(() => {
+                const followUpQuestions = followUps[energyLevel];
+                const randomQuestion = followUpQuestions[Math.floor(Math.random() * followUpQuestions.length)];
+                
+                const followUpElement = document.createElement('div');
+                followUpElement.style.marginTop = '10px';
+                followUpElement.style.padding = '10px';
+                followUpElement.style.background = '#fff';
+                followUpElement.style.border = '1px solid #667eea';
+                followUpElement.style.borderRadius = '8px';
+                followUpElement.style.fontSize = '14px';
+                followUpElement.innerHTML = `<strong>Follow-up reflection:</strong> ${randomQuestion}`;
+                
+                const middaySection = document.getElementById('middayMessage').parentElement;
+                middaySection.appendChild(followUpElement);
+            }, 2000);
+        }
+
+        function getNewCoaching() {
+            // Simulate getting fresh coaching messages
+            generateCoachingMessages();
+            
+            // Add a visual indication that content was refreshed
+            const coachingMessages = document.querySelectorAll('.coaching-message');
+            coachingMessages.forEach(message => {
+                message.style.opacity = '0.5';
+                setTimeout(() => {
+                    message.style.opacity = '1';
+                }, 300);
+            });
+
+            // Show a brief confirmation
+            const confirmation = document.createElement('div');
+            confirmation.style.position = 'fixed';
+            confirmation.style.top = '20px';
+            confirmation.style.left = '50%';
+            confirmation.style.transform = 'translateX(-50%)';
+            confirmation.style.background = '#4ecdc4';
+            confirmation.style.color = 'white';
+            confirmation.style.padding = '10px 20px';
+            confirmation.style.borderRadius = '20px';
+            confirmation.style.fontSize = '14px';
+            confirmation.style.zIndex = '1000';
+            confirmation.textContent = '✨ Fresh coaching loaded!';
+            
+            document.body.appendChild(confirmation);
+            setTimeout(() => {
+                confirmation.remove();
+            }, 2000);
+        }
+
+        // Initialize the app
+        function initializeApp() {
+            // Set up any initial state or event listeners
+            console.log('LuvWork initialized');
+            
+            // Simulate time-based coaching
+            setInterval(() => {
+                // In a real app, this would send push notifications
+                // For demo purposes, we'll just update available coaching
+                if (document.getElementById('coaching').classList.contains('active')) {
+                    // Refresh coaching content periodically
+                }
+            }, 30000); // Every 30 seconds for demo
+        }
+
+        // Weekly Assessment Questions (for future development)
+        const weeklyQuestions = [
+            {
+                week: 1,
+                questions: [
+                    "How did your energy shift throughout this week?",
+                    "What moment this week felt most 'you' at work?"
+                ]
+            },
+            {
+                week: 2,
+                questions: [
+                    "Where do you see the biggest gap between your current role and your ideal day?",
+                    "What would need to change for you to recommend your job to a friend?"
+                ]
+            },
+            {
+                week: 3,
+                questions: [
+                    "Which of your strengths felt most utilized this week?",
+                    "What challenge this week taught you something valuable?"
+                ]
+            },
+            {
+                week: 4,
+                questions: [
+                    "How has your relationship with your work shifted this month?",
+                    "What pattern are you noticing about what brings you joy?"
+                ]
+            }
+        ];
+
+        // Advanced coaching content for different user types
+        const advancedCoaching = {
+            'high-achiever': {
+                morning: "Your drive for excellence is powerful. Today, focus on progress over perfection.",
+                midday: "Check in: Are you pushing toward goals that truly matter to you?",
+                evening: "Excellence comes from consistency, not intensity. What did you do well today?"
+            },
+            'people-focused': {
+                morning: "Your relationships at work are a source of energy. Who can you support today?",
+                midday: "How are your connections feeling? Strong relationships fuel strong work.",
+                evening: "Your impact on others is part of your professional legacy. Notice it."
+            },
+            'creative-type': {
+                morning: "Your creativity needs space to emerge. What can you approach differently today?",
+                midday: "Innovation often comes from combining existing ideas in new ways. What can you connect?",
+                evening: "Creative work isn't always linear. Trust the process, even when it feels messy."
+            },
+            'stability-seeker': {
+                morning: "Stability and growth can coexist. What small step forward feels safe today?",
+                midday: "Your preference for predictability is valuable. How can you use it as a strength?",
+                evening: "Sustainable progress honors your need for security while still moving forward."
+            }
+        };
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+        // Auto-generate coaching messages when results screen loads
+        function displayResults() {
+            // Update scores
+            document.getElementById('joyScore').textContent = userProfile.overallScore;
+            document.getElementById('journeyScore').textContent = userProfile.journey;
+            document.getElementById('ownershipScore').textContent = userProfile.ownership;
+            document.getElementById('yearningScore').textContent = userProfile.yearning;
+
+            // Generate primary insight
+            const lowestDimension = getLowestDimension();
+            const insight = generateInsight(lowestDimension);
+            document.getElementById('primaryInsight').textContent = insight;
+
+            // Generate daily coaching message
+            const dailyMessage = generateDailyMessage();
+            document.getElementById('dailyCoachingMessage').textContent = dailyMessage;
+
+            // Generate action items
+            const actions = generateActionItems();
+            displayActionItems(actions);
+
+            // Pre-load coaching messages for the coaching screen
+            generateCoachingMessages();
+
+            showScreen('results');
+        }
+
+        // Add some sample data for demo purposes
+        function loadDemoData() {
+            userProfile = {
+                journey: 75,
+                ownership: 45,
+                yearning: 80,
+                energyPattern: 'creative',
+                values: 'impact',
+                overallScore: 67
+            };
+            
+            // Simulate having completed the assessment
+            userAnswers = [
+                { category: 'journey', value: 8, type: 'service' },
+                { category: 'ownership', value: 5, type: 'structure' },
+                { category: 'yearning', value: 9, type: 'strategy' },
+                { category: 'energy', value: 8, type: 'creative' },
+                { category: 'values', value: 8, type: 'impact' }
+            ];
+        }
+
+        // Add demo button functionality (hidden feature for testing)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'D' && e.shiftKey && e.ctrlKey) {
+                loadDemoData();
+                displayResults();
+            }
         });
     </script>
 </body>
