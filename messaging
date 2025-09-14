@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuvWork Coach</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            max-width: 400px;
+            margin: 0 auto;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: #000;
+            color: #fff;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .time {
+            font-size: 16px;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Header */
+        .chat-header {
+            background: rgba(28, 28, 30, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 0.5px solid rgba(84, 84, 88, 0.3);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            color: #007AFF;
+            font-size: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .contact-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .contact-name {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .contact-status {
+            color: #98989A;
+            font-size: 12px;
+        }
+
+        .contact-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Messages Container */
+        .messages-container {
+            flex: 1;
+            background: #000;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .message {
+            max-width: 80%;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        .message.coach {
+            align-self: flex-start;
+        }
+
+        .message.user {
+            align-self: flex-end;
+        }
+
+        .message-bubble {
+            padding: 10px 14px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .message.coach .message-bubble {
+            background: #2C2C2E;
+            color: #fff;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-bubble {
+            background: #007AFF;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #98989A;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        .message.coach .message-time {
+            text-align: left;
+        }
+
+        .message.user .message-time {
+            text-align: right;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            align-self: flex-start;
+            max-width: 60px;
+        }
+
+        .typing-bubble {
+            background: #2C2C2E;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            padding: 10px 14px;
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #98989A;
+            border-radius: 50%;
+            animation: typing 1.5s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Quick Replies */
+        .quick-replies {
+            padding: 0 16px 8px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .quick-reply {
+            background: rgba(44, 44, 46, 0.8);
+            color: #007AFF;
+            border: 1px solid #007AFF;
+            border-radius: 16px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-reply:hover {
+            background: #007AFF;
+            color: #fff;
+        }
+
+        /* Input Area */
+        .input-container {
+            background: rgba(28, 28, 30, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 0.5px solid rgba(84, 84, 88, 0.3);
+            padding: 8px 16px 20px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            background: #2C2C2E;
+            border-radius: 20px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            min-height: 36px;
+        }
+
+        .message-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            resize: none;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .message-input::placeholder {
+            color: #98989A;
+        }
+
+        .send-button {
+            width: 36px;
+            height: 36px;
+            background: #007AFF;
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s;
+        }
+
+        .send-button:hover {
+            transform: scale(1.05);
+        }
+
+        .send-button:disabled {
+            background: #48484A;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Date Separator */
+        .date-separator {
+            text-align: center;
+            margin: 16px 0 8px;
+            color: #98989A;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Affirmation Message */
+        .affirmation {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4) !important;
+            color: white !important;
+            font-style: italic;
+            position: relative;
+        }
+
+        .affirmation::before {
+            content: "✨";
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #fff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        /* Special message types */
+        .insight-message {
+            background: linear-gradient(135deg, #667eea, #764ba2) !important;
+            color: white !important;
+        }
+
+        .celebration-message {
+            background: linear-gradient(135deg, #f093fb, #f5576c) !important;
+            color: white !important;
+        }
+
+        /* Animations */
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-8px);
+                opacity: 1;
+            }
+        }
+
+        /* Scrollbar styling */
+        .messages-container::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        .messages-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 1px;
+        }
+
+        /* Hidden elements */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Pulse effect for new messages */
+        .new-message {
+            animation: pulse 0.5s ease-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.02);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="time" id="currentTime">9:41</div>
+            <div class="status-right">
+                <span></span>
+                <span></span>
+                <span></span></span>
+            </div>
+        </div>
+
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <button class="back-button">‹</button>
+            <div class="contact-info">
+                <div class="contact-name">LuvWork Coach</div>
+                <div class="contact-status" id="coachStatus">Always here to help</div>
+            </div>
+            <div class="contact-avatar">💙</div>
+        </div>
+
+        <!-- Messages Container -->
+        <div class="messages-container" id="messagesContainer">
+            <div class="date-separator" id="todayDate">Today</div>
+        </div>
+
+        <!-- Quick Replies -->
+        <div class="quick-replies hidden" id="quickReplies"></div>
+
+        <!-- Input Area -->
+        <div class="input-container">
+            <div class="input-wrapper">
+                <textarea class="message-input" id="messageInput" placeholder="Message" rows="1"></textarea>
+            </div>
+            <button class="send-button" id="sendButton" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // App State
+        let conversationHistory = [];
+        let userProfile = {
+            journey: Math.floor(Math.random() * 40) + 30, // 30-70
+            ownership: Math.floor(Math.random() * 40) + 30,
+            yearning: Math.floor(Math.random() * 40) + 30,
+            name: "there",
+            lastCheckIn: null,
+            streakDays: Math.floor(Math.random() * 7) + 1
+        };
+
+        // Coaching Content
+        const coachingContent = {
+            morningAffirmations: [
+                "You have unique strengths that make a difference in your work. Today, let one of them shine.",
+                "Every challenge you face is building your expertise. You're becoming more capable with each day.",
+                "Your perspective matters. Trust your instincts as you navigate today's decisions.",
+                "You don't have to be perfect to be valuable. Your authentic contribution is enough.",
+                "Today is a new opportunity to align your actions with what truly energizes you."
+            ],
+            
+            morningQuestions: [
+                "What would make today feel meaningful for you?",
+                "If you could choose just one thing to feel proud of by evening, what would it be?",
+                "What part of your work are you most curious about exploring today?",
+                "How do you want to show up for yourself and others today?",
+                "What would it look like to honor your energy levels today?"
+            ],
+
+            middayQuestions: [
+                "How's your energy right now? What do you notice about it?",
+                "What's been the most engaging part of your day so far?",
+                "If you could adjust one thing about your afternoon, what would it be?",
+                "What would help you feel more connected to your work right now?",
+                "How are you taking care of yourself in this moment?"
+            ],
+
+            eveningReflections: [
+                "What brought you the most satisfaction today?",
+                "What did you learn about yourself or your work today?",
+                "How did you grow or stretch yourself, even in small ways?",
+                "What are you grateful for in your work experience today?",
+                "What would you like to carry forward from today into tomorrow?"
+            ],
+
+            supportiveResponses: {
+                positive: [
+                    "That's wonderful to hear! What do you think created that positive experience?",
+                    "I love hearing that! It sounds like something is really clicking for you.",
+                    "That's fantastic! Your awareness of what works for you is growing.",
+                    "Beautiful! Those moments of alignment are so valuable to notice."
+                ],
+                neutral: [
+                    "Thanks for sharing that with me. Sometimes neutral is exactly where we need to be.",
+                    "I appreciate your honesty. What might help shift things slightly in a positive direction?",
+                    "That's completely valid. What would make the biggest difference for you right now?",
+                    "Sometimes the best insights come from these in-between moments."
+                ],
+                challenging: [
+                    "I hear you. Those difficult moments often have the most to teach us.",
+                    "Thank you for trusting me with that. What support would feel most helpful right now?",
+                    "That sounds really tough. What would feel like a small step in a better direction?",
+                    "I'm glad you're being honest about this. What would help you feel more grounded?"
+                ]
+            },
+
+            quickReplies: {
+                energy: ["High energy!", "Feeling good", "Neutral", "Low energy", "Exhausted"],
+                satisfaction: ["Very satisfied", "Pretty good", "Okay", "Frustrated", "Really struggling"],
+                time: ["Morning person", "Afternoon peak", "Evening energy", "Energy varies"],
+                focus: ["Deep work", "Collaboration", "Learning", "Helping others", "Creating"],
+                general: ["Yes", "No", "Maybe", "Tell me more", "Not sure"]
+            }
+        };
+
+        // DOM Elements
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const quickReplies = document.getElementById('quickReplies');
+        const coachStatus = document.getElementById('coachStatus');
+        const currentTime = document.getElementById('currentTime');
+        const todayDate = document.getElementById('todayDate');
+
+        // Initialize App
+        function initializeApp() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            setupEventListeners();
+            startDailyCoaching();
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+            currentTime.textContent = timeString;
+            
+            const dateString = now.toLocaleDateString([], {weekday: 'long', month: 'long', day: 'numeric'});
+            todayDate.textContent = dateString;
+        }
+
+        function setupEventListeners() {
+            messageInput.addEventListener('input', handleInputChange);
+            messageInput.addEventListener('keypress', handleKeyPress);
+            sendButton.addEventListener('click', sendUserMessage);
+        }
+
+        function handleInputChange() {
+            const hasText = messageInput.value.trim().length > 0;
+            sendButton.disabled = !hasText;
+            
+            // Auto-resize textarea
+            messageInput.style.height = 'auto';
+            messageInput.style.height = messageInput.scrollHeight + 'px';
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!sendButton.disabled) {
+                    sendUserMessage();
+                }
+            }
+        }
+
+        function addMessage(content, isUser = false, messageType = 'normal', delay = 0) {
+            setTimeout(() => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user' : 'coach'} new-message`;
+                
+                const bubbleDiv = document.createElement('div');
+                bubbleDiv.className = `message-bubble ${messageType}`;
+                bubbleDiv.textContent = content;
+                
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = new Date().toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+                
+                messageDiv.appendChild(bubbleDiv);
+                messageDiv.appendChild(timeDiv);
+                messagesContainer.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Store in conversation history
+                conversationHistory.push({
+                    content,
+                    isUser,
+                    messageType,
+                    timestamp: new Date()
+                });
+            }, delay);
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message coach typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'typing-bubble';
+            
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                bubbleDiv.appendChild(dot);
+            }
+            
+            typingDiv.appendChild(bubbleDiv);
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            coachStatus.textContent = "typing...";
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            coachStatus.textContent = "Always here to help";
+        }
+
+        function showQuickReplies(replies) {
+            quickReplies.innerHTML = '';
+            
+            replies.forEach(reply => {
+                const button = document.createElement('button');
+                button.className = 'quick-reply';
+                button.textContent = reply;
+                button.onclick = () => selectQuickReply(reply);
+                quickReplies.appendChild(button);
+            });
+            
+            quickReplies.classList.remove('hidden');
+        }
+
+        function hideQuickReplies() {
+            quickReplies.classList.add('hidden');
+        }
+
+        function selectQuickReply(reply) {
+            addMessage(reply, true);
+            hideQuickReplies();
+            handleUserResponse(reply);
+        }
+
+        function sendUserMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            addMessage(message, true);
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            sendButton.disabled = true;
+            hideQuickReplies();
+            
+            handleUserResponse(message);
+        }
+
+        function handleUserResponse(response) {
+            // Simple sentiment analysis
+            const lowerResponse = response.toLowerCase();
+            let sentiment = 'neutral';
+            
+            const positiveWords = ['good', 'great', 'love', 'amazing', 'excellent', 'perfect', 'wonderful', 'happy', 'energized', 'excited'];
+            const negativeWords = ['bad', 'terrible', 'hate', 'awful', 'frustrated', 'exhausted', 'overwhelmed', 'stressed', 'difficult'];
+            
+            if (positiveWords.some(word => lowerResponse.includes(word))) {
+                sentiment = 'positive';
+            } else if (negativeWords.some(word => lowerResponse.includes(word))) {
+                sentiment = 'challenging';
+            }
+            
+            // Generate appropriate response
+            setTimeout(() => {
+                generateCoachResponse(response, sentiment);
+            }, Math.random() * 1000 + 500);
+        }
+
+        function generateCoachResponse(userMessage, sentiment) {
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                const responses = coachingContent.supportiveResponses[sentiment];
+                const response = responses[Math.floor(Math.random() * responses.length)];
+                
+                addMessage(response);
+                
+                // Follow up with another question or affirmation
+                setTimeout(() => {
+                    const followUp = generateFollowUpMessage(sentiment);
+                    if (followUp.quickReplies) {
+                        showQuickReplies(followUp.quickReplies);
+                    }
+                    if (followUp.message) {
+                        addMessage(followUp.message, false, followUp.type || 'normal');
+                    }
+                }, 2000);
+                
+            }, Math.random() * 2000 + 1000);
+        }
+
+        function generateFollowUpMessage(sentiment) {
+            const hour = new Date().getHours();
+            
+            if (hour < 12) {
+                return {
+                    message: coachingContent.morningQuestions[Math.floor(Math.random() * coachingContent.morningQuestions.length)],
+                    quickReplies: ['Tell me more', 'That resonates', 'Not sure', 'Something else']
+                };
+            } else if (hour < 17) {
+                return {
+                    message: coachingContent.middayQuestions[Math.floor(Math.random() * coachingContent.middayQuestions.length)],
+                    quickReplies: coachingContent.quickReplies.energy
+                };
+            } else {
+                return {
+                    message: coachingContent.eveningReflections[Math.floor(Math.random() * coachingContent.eveningReflections.length)],
+                    quickReplies: ['Definitely', 'Somewhat', 'Not really', 'Let me think']
+                };
+            }
+        }
+
+        function startDailyCoaching() {
+            const hour = new Date().getHours();
+            
+            // Welcome message
+            setTimeout(() => {
+                addMessage(`Hi ${userProfile.name}! I'm here to help you find more joy in your work. 😊`);
+            }, 1000);
+            
+            // Initial coaching based on time of day
+            if (hour < 12) {
+                setTimeout(() => {
+                    const affirmation = coachingContent.morningAffirmations[Math.floor(Math.random() * coachingContent.morningAffirmations.length)];
+                    addMessage(affirmation, false, 'affirmation');
+                }, 2500);
+                
+                setTimeout(() => {
+                    const question = coachingContent.morningQuestions[Math.floor(Math.random() * coachingContent.morningQuestions.length)];
+                    addMessage(question);
+                    showQuickReplies(['Feeling motivated', 'A bit uncertain', 'Excited to start', 'Need some guidance']);
+                }, 4000);
+            } else if (hour < 17) {
+                setTimeout(() => {
+                    addMessage("How's your day unfolding so far?");
+                    showQuickReplies(coachingContent.quickReplies.satisfaction);
+                }, 2500);
+            } else {
+                setTimeout(() => {
+                    addMessage("As you wrap up your day, let's reflect on how it went.");
+                    showQuickReplies(['It was great', 'Pretty good', 'Mixed feelings', 'Challenging day']);
+                }, 2500);
+            }
+            
+            // Periodic check-ins
+            schedulePeriodicMessages();
+        }
+
+        function schedulePeriodicMessages() {
+            // Send a motivational message every 15 minutes (demo purposes - would be hours in real app)
+            setInterval(() => {
+                if (Math.random() > 0.7) { // 30% chance
+                    const motivationalMessages = [
+                        "Remember: small steps today create big changes tomorrow. 🌟",
+                        "Your growth mindset is one of your greatest assets. Keep nurturing it!",
+                        "Every challenge you're facing is building your resilience. You've got this! 💪",
+                        "Take a moment to appreciate how far you've come in your journey.",
+                        "Your unique perspective is valuable. Don't underestimate your contributions."
+                    ];
+                    
+                    const message = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+                    addMessage(message, false, 'affirmation');
+                }
+            }, 15000); // 15 seconds for demo, would be much longer in real app
+        }
+
+        function generatePersonalizedInsight() {
+            const insights = [
+                "I've noticed you have great energy in the mornings. Have you considered tackling your most important work earlier in the day?",
+                "Your responses show you value meaningful connections. How might you strengthen relationships with colleagues this week?",
+                "You seem to thrive when you have autonomy over your decisions. Where could you claim more ownership?",
+                "I can tell you care deeply about growth. What's one skill you'd love to develop further?",
+                "Your awareness of your energy patterns is growing. That's a powerful foundation for creating better work days."
+            ];
+            
+            return insights[Math.floor(Math.random() * insights.length)];
+        }
+
+        // Add periodic personalized insights
+        setTimeout(() => {
+            const insight = generatePersonalizedInsight();
+            addMessage(insight, false, 'insight-message');
+        }, 30000); // After 30 seconds
+
+        // Initialize the app when page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
