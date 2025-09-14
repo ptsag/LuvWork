@@ -44,12 +44,6 @@
             font-size: 16px;
         }
 
-        .status-right {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
         /* Header */
         .chat-header {
             background: rgba(28, 28, 30, 0.95);
@@ -91,12 +85,12 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #4ECDC4, #3377DF);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
         }
 
@@ -129,6 +123,7 @@
             border-radius: 18px;
             word-wrap: break-word;
             position: relative;
+            line-height: 1.4;
         }
 
         .message.coach .message-bubble {
@@ -276,45 +271,19 @@
             transform: none;
         }
 
-        /* Date Separator */
-        .date-separator {
-            text-align: center;
-            margin: 16px 0 8px;
-            color: #98989A;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        /* Affirmation Message */
+        /* Special message types */
         .affirmation {
             background: linear-gradient(135deg, #FF6B6B, #4ECDC4) !important;
             color: white !important;
             font-style: italic;
-            position: relative;
         }
 
-        .affirmation::before {
-            content: "✨";
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #fff;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-
-        /* Special message types */
         .insight-message {
             background: linear-gradient(135deg, #667eea, #764ba2) !important;
             color: white !important;
         }
 
-        .celebration-message {
+        .assessment-message {
             background: linear-gradient(135deg, #f093fb, #f5576c) !important;
             color: white !important;
         }
@@ -361,7 +330,6 @@
             display: none !important;
         }
 
-        /* Pulse effect for new messages */
         .new-message {
             animation: pulse 0.5s ease-out;
         }
@@ -386,11 +354,6 @@
         <!-- Status Bar -->
         <div class="status-bar">
             <div class="time" id="currentTime">9:41</div>
-            <div class="status-right">
-                <span></span>
-                <span></span>
-                <span></span></span>
-            </div>
         </div>
 
         <!-- Chat Header -->
@@ -400,12 +363,11 @@
                 <div class="contact-name">LuvWork Coach</div>
                 <div class="contact-status" id="coachStatus">Always here to help</div>
             </div>
-            <div class="contact-avatar">💙</div>
+            <div class="contact-avatar">LW</div>
         </div>
 
         <!-- Messages Container -->
         <div class="messages-container" id="messagesContainer">
-            <div class="date-separator" id="todayDate">Today</div>
         </div>
 
         <!-- Quick Replies -->
@@ -428,76 +390,52 @@
         // App State
         let conversationHistory = [];
         let userProfile = {
-            journey: Math.floor(Math.random() * 40) + 30, // 30-70
-            ownership: Math.floor(Math.random() * 40) + 30,
-            yearning: Math.floor(Math.random() * 40) + 30,
-            name: "there",
-            lastCheckIn: null,
-            streakDays: Math.floor(Math.random() * 7) + 1
+            name: null,
+            interactionCount: 0,
+            themes: [],
+            sentiment: 'neutral',
+            personalityType: null
         };
 
         // Coaching Content
-        const coachingContent = {
-            morningAffirmations: [
-                "You have unique strengths that make a difference in your work. Today, let one of them shine.",
-                "Every challenge you face is building your expertise. You're becoming more capable with each day.",
-                "Your perspective matters. Trust your instincts as you navigate today's decisions.",
-                "You don't have to be perfect to be valuable. Your authentic contribution is enough.",
-                "Today is a new opportunity to align your actions with what truly energizes you."
+        const coachingResponses = {
+            welcome: [
+                "I'm your LuvWork coach. I'm here to help you discover more joy and fulfillment in your work.",
+                "I'm excited to explore how we can make your work more energizing and meaningful.",
+                "Whether you're reflecting on today or thinking about tomorrow, I'm here to support you."
             ],
             
-            morningQuestions: [
-                "What would make today feel meaningful for you?",
-                "If you could choose just one thing to feel proud of by evening, what would it be?",
-                "What part of your work are you most curious about exploring today?",
-                "How do you want to show up for yourself and others today?",
-                "What would it look like to honor your energy levels today?"
-            ],
-
-            middayQuestions: [
-                "How's your energy right now? What do you notice about it?",
-                "What's been the most engaging part of your day so far?",
-                "If you could adjust one thing about your afternoon, what would it be?",
-                "What would help you feel more connected to your work right now?",
-                "How are you taking care of yourself in this moment?"
-            ],
-
-            eveningReflections: [
-                "What brought you the most satisfaction today?",
-                "What did you learn about yourself or your work today?",
-                "How did you grow or stretch yourself, even in small ways?",
-                "What are you grateful for in your work experience today?",
-                "What would you like to carry forward from today into tomorrow?"
-            ],
-
-            supportiveResponses: {
+            personalizedResponses: {
                 positive: [
-                    "That's wonderful to hear! What do you think created that positive experience?",
-                    "I love hearing that! It sounds like something is really clicking for you.",
-                    "That's fantastic! Your awareness of what works for you is growing.",
-                    "Beautiful! Those moments of alignment are so valuable to notice."
-                ],
-                neutral: [
-                    "Thanks for sharing that with me. Sometimes neutral is exactly where we need to be.",
-                    "I appreciate your honesty. What might help shift things slightly in a positive direction?",
-                    "That's completely valid. What would make the biggest difference for you right now?",
-                    "Sometimes the best insights come from these in-between moments."
+                    "I can hear the positive energy in what you're sharing! That's wonderful.",
+                    "That enthusiasm is one of your greatest professional assets.",
+                    "What do you think is creating that positive feeling?"
                 ],
                 challenging: [
-                    "I hear you. Those difficult moments often have the most to teach us.",
-                    "Thank you for trusting me with that. What support would feel most helpful right now?",
-                    "That sounds really tough. What would feel like a small step in a better direction?",
-                    "I'm glad you're being honest about this. What would help you feel more grounded?"
+                    "I can sense this is weighing on you. What would feel most supportive right now?",
+                    "That sounds really challenging. What's helped you handle similar situations before?",
+                    "What support would make the biggest difference?"
+                ],
+                neutral: [
+                    "Tell me more about that. What feels most important to explore?",
+                    "What's been on your mind about work lately?",
+                    "How are you feeling about your work experience right now?"
                 ]
             },
 
-            quickReplies: {
-                energy: ["High energy!", "Feeling good", "Neutral", "Low energy", "Exhausted"],
-                satisfaction: ["Very satisfied", "Pretty good", "Okay", "Frustrated", "Really struggling"],
-                time: ["Morning person", "Afternoon peak", "Evening energy", "Energy varies"],
-                focus: ["Deep work", "Collaboration", "Learning", "Helping others", "Creating"],
-                general: ["Yes", "No", "Maybe", "Tell me more", "Not sure"]
-            }
+            followUpQuestions: {
+                development: "What kind of growth would have the biggest impact on your work satisfaction?",
+                relationships: "How do the relationships at work affect your daily experience?",
+                purpose: "When you think about meaningful work, what resonates most with you?",
+                timeManagement: "What would change if you had more control over your work time?"
+            },
+
+            affirmations: [
+                "Your willingness to reflect on your work shows real wisdom.",
+                "The questions you're asking are already transforming how you show up.",
+                "Your growth mindset is creating new possibilities.",
+                "You're recognizing your own power to shape your experience."
+            ]
         };
 
         // DOM Elements
@@ -507,23 +445,19 @@
         const quickReplies = document.getElementById('quickReplies');
         const coachStatus = document.getElementById('coachStatus');
         const currentTime = document.getElementById('currentTime');
-        const todayDate = document.getElementById('todayDate');
 
         // Initialize App
         function initializeApp() {
             updateTime();
             setInterval(updateTime, 1000);
             setupEventListeners();
-            startDailyCoaching();
+            startConversation();
         }
 
         function updateTime() {
             const now = new Date();
             const timeString = now.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
             currentTime.textContent = timeString;
-            
-            const dateString = now.toLocaleDateString([], {weekday: 'long', month: 'long', day: 'numeric'});
-            todayDate.textContent = dateString;
         }
 
         function setupEventListeners() {
@@ -536,7 +470,6 @@
             const hasText = messageInput.value.trim().length > 0;
             sendButton.disabled = !hasText;
             
-            // Auto-resize textarea
             messageInput.style.height = 'auto';
             messageInput.style.height = messageInput.scrollHeight + 'px';
         }
@@ -567,10 +500,8 @@
                 messageDiv.appendChild(timeDiv);
                 messagesContainer.appendChild(messageDiv);
                 
-                // Scroll to bottom
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 
-                // Store in conversation history
                 conversationHistory.push({
                     content,
                     isUser,
@@ -647,144 +578,168 @@
         }
 
         function handleUserResponse(response) {
-            // Simple sentiment analysis
+            userProfile.interactionCount++;
+
+            // Handle name detection
+            if (!userProfile.name && userProfile.interactionCount === 1 && 
+                response.length < 30 && !response.includes('?')) {
+                userProfile.name = response.trim();
+                
+                setTimeout(() => {
+                    addMessage(`Nice to meet you, ${userProfile.name}! I'm genuinely excited to be part of your journey toward more fulfilling work.`);
+                }, 1000);
+                
+                setTimeout(() => {
+                    addMessage("What's been on your mind about work lately?");
+                    showQuickReplies(['Feeling stuck', 'Want more growth', 'Seeking purpose', 'Need better balance', 'Just exploring']);
+                }, 2500);
+                
+                return;
+            }
+
+            // Analyze response
+            const analysis = analyzeResponse(response);
+            updateUserProfile(analysis);
+
+            // Generate response
+            setTimeout(() => {
+                generateResponse(response, analysis);
+            }, Math.random() * 1000 + 500);
+        }
+
+        function analyzeResponse(response) {
             const lowerResponse = response.toLowerCase();
-            let sentiment = 'neutral';
             
-            const positiveWords = ['good', 'great', 'love', 'amazing', 'excellent', 'perfect', 'wonderful', 'happy', 'energized', 'excited'];
-            const negativeWords = ['bad', 'terrible', 'hate', 'awful', 'frustrated', 'exhausted', 'overwhelmed', 'stressed', 'difficult'];
+            let sentiment = 'neutral';
+            const positiveWords = ['good', 'great', 'love', 'excited', 'happy', 'energized'];
+            const negativeWords = ['bad', 'frustrated', 'stressed', 'difficult', 'stuck'];
             
             if (positiveWords.some(word => lowerResponse.includes(word))) {
                 sentiment = 'positive';
             } else if (negativeWords.some(word => lowerResponse.includes(word))) {
                 sentiment = 'challenging';
             }
-            
-            // Generate appropriate response
-            setTimeout(() => {
-                generateCoachResponse(response, sentiment);
-            }, Math.random() * 1000 + 500);
+
+            const themes = [];
+            if (lowerResponse.includes('team') || lowerResponse.includes('colleague')) {
+                themes.push('relationships');
+            }
+            if (lowerResponse.includes('learn') || lowerResponse.includes('grow')) {
+                themes.push('development');
+            }
+            if (lowerResponse.includes('purpose') || lowerResponse.includes('meaning')) {
+                themes.push('purpose');
+            }
+            if (lowerResponse.includes('time') || lowerResponse.includes('busy')) {
+                themes.push('timeManagement');
+            }
+
+            return { sentiment, themes };
         }
 
-        function generateCoachResponse(userMessage, sentiment) {
+        function updateUserProfile(analysis) {
+            userProfile.sentiment = analysis.sentiment;
+            analysis.themes.forEach(theme => {
+                if (!userProfile.themes.includes(theme)) {
+                    userProfile.themes.push(theme);
+                }
+            });
+        }
+
+        function generateResponse(userMessage, analysis) {
             showTypingIndicator();
             
             setTimeout(() => {
                 hideTypingIndicator();
                 
-                const responses = coachingContent.supportiveResponses[sentiment];
+                // Check if it's time for recommendations
+                if (userProfile.readyForRecommendations && userProfile.interactionCount >= 3) {
+                    generateRecommendations();
+                    userProfile.readyForRecommendations = false; // Don't show again immediately
+                    return;
+                }
+                
+                // Select appropriate response
+                const responses = coachingResponses.personalizedResponses[analysis.sentiment];
                 const response = responses[Math.floor(Math.random() * responses.length)];
                 
-                addMessage(response);
+                addMessage(response, false, analysis.sentiment === 'challenging' ? 'insight-message' : 'normal');
                 
-                // Follow up with another question or affirmation
-                setTimeout(() => {
-                    const followUp = generateFollowUpMessage(sentiment);
-                    if (followUp.quickReplies) {
-                        showQuickReplies(followUp.quickReplies);
-                    }
-                    if (followUp.message) {
-                        addMessage(followUp.message, false, followUp.type || 'normal');
-                    }
-                }, 2000);
+                // Add follow-up if not showing recommendations yet
+                if (userProfile.interactionCount < 3) {
+                    setTimeout(() => {
+                        if (analysis.themes.length > 0) {
+                            const theme = analysis.themes[0];
+                            const followUp = coachingResponses.followUpQuestions[theme];
+                            if (followUp) {
+                                addMessage(followUp, false, 'assessment-message');
+                                
+                                // Add appropriate quick replies
+                                let replies = [];
+                                if (theme === 'development') {
+                                    replies = ['Leadership skills', 'Technical expertise', 'Communication', 'Creative thinking'];
+                                } else if (theme === 'relationships') {
+                                    replies = ['Very energizing', 'Mostly positive', 'Mixed', 'Often draining'];
+                                } else if (theme === 'purpose') {
+                                    replies = ['Making an impact', 'Using my strengths', 'Helping others', 'Creating something'];
+                                } else if (theme === 'timeManagement') {
+                                    replies = ['More focus time', 'Better priorities', 'Less meetings', 'More flexibility'];
+                                } else if (theme === 'leadership') {
+                                    replies = ['Leading projects', 'Mentoring others', 'Making decisions', 'Driving change'];
+                                } else if (theme === 'creativity') {
+                                    replies = ['New ideas', 'Different approaches', 'Innovation', 'Creative solutions'];
+                                }
+                                
+                                if (replies.length > 0) {
+                                    showQuickReplies(replies);
+                                }
+                            }
+                        } else {
+                            // General follow-up
+                            addMessage("What would you most like to explore about your work experience?", false, 'normal');
+                            showQuickReplies(['My daily energy', 'Career growth', 'Work relationships', 'Finding purpose']);
+                        }
+                    }, 2000);
+                } else {
+                    // After recommendations, keep conversation going
+                    setTimeout(() => {
+                        addMessage("How do these suggestions land with you? What feels most actionable?", false, 'normal');
+                    }, 8000); // Wait for recommendations to finish
+                }
+                
+                // Add affirmation occasionally
+                if (Math.random() > 0.5 && userProfile.interactionCount < 3) {
+                    setTimeout(() => {
+                        const affirmation = coachingResponses.affirmations[Math.floor(Math.random() * coachingResponses.affirmations.length)];
+                        addMessage(affirmation, false, 'affirmation');
+                    }, 4000);
+                }
                 
             }, Math.random() * 2000 + 1000);
         }
 
-        function generateFollowUpMessage(sentiment) {
+        function startConversation() {
             const hour = new Date().getHours();
+            let greeting = "";
             
             if (hour < 12) {
-                return {
-                    message: coachingContent.morningQuestions[Math.floor(Math.random() * coachingContent.morningQuestions.length)],
-                    quickReplies: ['Tell me more', 'That resonates', 'Not sure', 'Something else']
-                };
+                greeting = "Good morning! " + coachingResponses.welcome[0];
             } else if (hour < 17) {
-                return {
-                    message: coachingContent.middayQuestions[Math.floor(Math.random() * coachingContent.middayQuestions.length)],
-                    quickReplies: coachingContent.quickReplies.energy
-                };
+                greeting = "Good afternoon! " + coachingResponses.welcome[1];
             } else {
-                return {
-                    message: coachingContent.eveningReflections[Math.floor(Math.random() * coachingContent.eveningReflections.length)],
-                    quickReplies: ['Definitely', 'Somewhat', 'Not really', 'Let me think']
-                };
+                greeting = "Good evening! " + coachingResponses.welcome[2];
             }
-        }
-
-        function startDailyCoaching() {
-            const hour = new Date().getHours();
             
-            // Welcome message
             setTimeout(() => {
-                addMessage(`Hi ${userProfile.name}! I'm here to help you find more joy in your work. 😊`);
+                addMessage(greeting);
             }, 1000);
             
-            // Initial coaching based on time of day
-            if (hour < 12) {
-                setTimeout(() => {
-                    const affirmation = coachingContent.morningAffirmations[Math.floor(Math.random() * coachingContent.morningAffirmations.length)];
-                    addMessage(affirmation, false, 'affirmation');
-                }, 2500);
-                
-                setTimeout(() => {
-                    const question = coachingContent.morningQuestions[Math.floor(Math.random() * coachingContent.morningQuestions.length)];
-                    addMessage(question);
-                    showQuickReplies(['Feeling motivated', 'A bit uncertain', 'Excited to start', 'Need some guidance']);
-                }, 4000);
-            } else if (hour < 17) {
-                setTimeout(() => {
-                    addMessage("How's your day unfolding so far?");
-                    showQuickReplies(coachingContent.quickReplies.satisfaction);
-                }, 2500);
-            } else {
-                setTimeout(() => {
-                    addMessage("As you wrap up your day, let's reflect on how it went.");
-                    showQuickReplies(['It was great', 'Pretty good', 'Mixed feelings', 'Challenging day']);
-                }, 2500);
-            }
-            
-            // Periodic check-ins
-            schedulePeriodicMessages();
+            setTimeout(() => {
+                addMessage("I'd love to get to know you better. What's your name?");
+            }, 2500);
         }
 
-        function schedulePeriodicMessages() {
-            // Send a motivational message every 15 minutes (demo purposes - would be hours in real app)
-            setInterval(() => {
-                if (Math.random() > 0.7) { // 30% chance
-                    const motivationalMessages = [
-                        "Remember: small steps today create big changes tomorrow. 🌟",
-                        "Your growth mindset is one of your greatest assets. Keep nurturing it!",
-                        "Every challenge you're facing is building your resilience. You've got this! 💪",
-                        "Take a moment to appreciate how far you've come in your journey.",
-                        "Your unique perspective is valuable. Don't underestimate your contributions."
-                    ];
-                    
-                    const message = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
-                    addMessage(message, false, 'affirmation');
-                }
-            }, 15000); // 15 seconds for demo, would be much longer in real app
-        }
-
-        function generatePersonalizedInsight() {
-            const insights = [
-                "I've noticed you have great energy in the mornings. Have you considered tackling your most important work earlier in the day?",
-                "Your responses show you value meaningful connections. How might you strengthen relationships with colleagues this week?",
-                "You seem to thrive when you have autonomy over your decisions. Where could you claim more ownership?",
-                "I can tell you care deeply about growth. What's one skill you'd love to develop further?",
-                "Your awareness of your energy patterns is growing. That's a powerful foundation for creating better work days."
-            ];
-            
-            return insights[Math.floor(Math.random() * insights.length)];
-        }
-
-        // Add periodic personalized insights
-        setTimeout(() => {
-            const insight = generatePersonalizedInsight();
-            addMessage(insight, false, 'insight-message');
-        }, 30000); // After 30 seconds
-
-        // Initialize the app when page loads
+        // Initialize the app
         document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
